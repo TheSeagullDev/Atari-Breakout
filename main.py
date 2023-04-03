@@ -32,10 +32,12 @@ def main():
     clock = pygame.time.Clock()
 
     paddle = pygame.rect.Rect(WIDTH / 2 - PADDLE_WIDTH / 2, HEIGHT - PADDLE_HEIGHT - 10, PADDLE_WIDTH, PADDLE_HEIGHT)
+    x_pos = paddle.x
 
     ball = pygame.rect.Rect(WIDTH / 2 - BALL_RADIUS, 450, 2 * BALL_RADIUS, 2 * BALL_RADIUS)
     ball_y_vel = 5
-    ball_x_vel = random.random() * random.randint(-10, 10)
+    #ball_x_vel = random.random() * random.randint(-10, 10)
+    ball_x_vel = 1
 
     bricks = []
     for row_num in range(4):
@@ -54,6 +56,7 @@ def main():
                 break
 
         # Moves paddle to mouse position
+        mouse_vel = pygame.mouse.get_pos()[0] - x_pos
         x_pos = pygame.mouse.get_pos()[0]
 
         if PADDLE_WIDTH / 2 < x_pos < WIDTH - PADDLE_WIDTH / 2:
@@ -67,6 +70,8 @@ def main():
         # Paddle collisions
         if pygame.Rect.colliderect(paddle, ball):
             ball_y_vel *= -1
+            ball_x_vel -= mouse_vel
+            ball_x_vel *= -0.2
         # Edge collisions
         if ball.y + ball_y_vel < 0:
             ball_y_vel *= -1
